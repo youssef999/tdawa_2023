@@ -39,12 +39,20 @@ import 'admin_state.dart';
   XFile? pickedImageXFile;
   List<Country>countryList=[];
 
+  Map<String, String> myheaders = {
+ "lang": 'ar',
+  "Content-Type": "application/json",
+    'authorization':'Basic ' +
+        base64Encode(utf8.encode(
+            'user_test:123456'))
+  };
+
   Future <List<Country>> getAllCountries()async {
 
 
     emit(GetCountryLoadingState());
     try{
-      var res = await http.get(Uri.parse(API.Country));
+      var res = await http.get(Uri.parse(API.Country),headers: myheaders);
 
       if (res.statusCode == 200) {
 
@@ -79,7 +87,9 @@ import 'admin_state.dart';
 
       try{
         emit(AddBestLoadingState());
-        var res =await http.post(Uri.parse(API.AddBestAdd),body: {
+        var res =await http.post(Uri.parse(API.AddBestAdd,),
+          headers: myheaders,
+          body: {
           'id':id,
         },
         );
@@ -115,7 +125,9 @@ import 'admin_state.dart';
     try {
 
       emit(AddBakaLoadingState());
-      var res = await http.post(Uri.parse(API.AddBaka), body:
+      var res = await http.post(Uri.parse(API.AddBaka),
+          headers: myheaders,
+          body:
       {
         'details':detailsController.text,
         'description':desController.text,
@@ -152,7 +164,9 @@ import 'admin_state.dart';
      print("IMAGE");
      print("$imageLink");
         emit(AddCatLoadingState());
-        var res = await http.post(Uri.parse(API.AddCat), body:
+        var res = await http.post(Uri.parse(API.AddCat),
+            headers: myheaders,
+            body:
         {
           'image':imageLink,
           'name':nameController.text,
@@ -184,7 +198,9 @@ import 'admin_state.dart';
     try {
 
       emit(AddCountryLoadingState());
-      var res = await http.post(Uri.parse(API.AddCountry), body:
+      var res = await http.post(Uri.parse(API.AddCountry),
+          headers: myheaders,
+          body:
       {
         'name':nameController.text,
       }
@@ -212,7 +228,9 @@ import 'admin_state.dart';
     emit(DeleteCatLoadingState());
     try {
       var res =
-      await http.post(Uri.parse(API.DeleteCountry), body:
+      await http.post(Uri.parse(API.DeleteCountry),
+          headers: myheaders,
+          body:
       {
         "id":id,
       }
@@ -235,8 +253,6 @@ import 'admin_state.dart';
       print("ERROR==$e");
       emit(DeleteCountryErrorState( error: '$e',));
     }
-
-
   }
 
   Future<List<Cat>> getAllCat() async {
@@ -244,6 +260,7 @@ import 'admin_state.dart';
       emit(getCatLoadingState());
       var res = await http.get(
         Uri.parse(API.allCat),
+        headers: myheaders,
       );
 
       if (res.statusCode == 200) {
@@ -275,6 +292,7 @@ import 'admin_state.dart';
     try{
       emit(getBakaLoadingState());
       var res =await http.get(Uri.parse(API.bouquet),
+        headers: myheaders,
       );
 
       if(res.statusCode==200){
@@ -309,7 +327,9 @@ import 'admin_state.dart';
     try {
 
       var res =
-      await http.post(Uri.parse(API.DeleteBaka), body:
+      await http.post(Uri.parse(API.DeleteBaka),
+          headers: myheaders,
+          body:
       {
         "id":id,
       }
@@ -372,7 +392,9 @@ import 'admin_state.dart';
     try {
       emit(GetAllDoctorsLoadingState());
       var res = await http.get(
-        Uri.parse(API.AdminGetDoctors));
+        Uri.parse(API.AdminGetDoctors),
+        headers: myheaders,
+      );
       if (res.statusCode == 200) {
         print(res.body);
         var responseBody = jsonDecode(res.body);
@@ -397,7 +419,11 @@ import 'admin_state.dart';
 
     return doctorList;
   }
+
+
   Future<List<Ads>> getAllAds() async {
+
+
     print("ALL ADS");
     final box = GetStorage();
     String country = box.read('country') ?? 'x';
@@ -406,15 +432,19 @@ import 'admin_state.dart';
       emit(GetAllAdsLoadingState());
       var res = await http.get(
         Uri.parse(API.ads),
+       // headers: myheaders,
       );
+      print("RES");
       print(res.body);
+      print(res.statusCode);
+      print(res.headers);
+      print(res.request);
       if (res.statusCode == 200) {
         print(res.body);
         var responseBody = jsonDecode(res.body);
-
         print(responseBody);
-
         if (responseBody["success"] == true) {
+          print("DATA");
           print(responseBody['Data']);
 
           (responseBody['Data'] as List).forEach((eachRecord) {
@@ -423,15 +453,28 @@ import 'admin_state.dart';
 
           print("Appointment===$adsList");
         }
+
         emit(GetAllAdsSuccessState());
-      } else {
+      }
+
+      else {
+
+        print("ERROR HERE1111");
+
         print("ERRRROORRRRRRRRRRR................");
+
         print(res.statusCode);
+
         emit(GetAllAdsErrorState( 'error'));
       }
     } catch (e) {
+
+      print("ERROR HERE2222");
+
       print("ERRRROORRRRRRRRRRR................");
+
       print(e.toString());
+
       emit(GetAllAdsErrorState( e.toString()));
     }
 

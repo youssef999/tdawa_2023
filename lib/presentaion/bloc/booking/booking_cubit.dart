@@ -126,9 +126,6 @@ class BookingCubit extends Cubit<BookingStates> {
     return bookingList;
   }
 
-
-
-
  }
 
 

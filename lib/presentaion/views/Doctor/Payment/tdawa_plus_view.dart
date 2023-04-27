@@ -10,7 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class TdawaPlusView extends StatelessWidget {
-  const TdawaPlusView({Key? key}) : super(key: key);
+  bool sales;
+ TdawaPlusView({required this.sales,Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +66,7 @@ class TdawaPlusView extends StatelessWidget {
           ),
       ),
               const SizedBox(height: 23,),
-              BakaWidget(bakaList: tdawaCubit.bakaList)
-
-
-
+              BakaWidget(bakaList: tdawaCubit.bakaList,sales:sales)
 
             ],
           ),

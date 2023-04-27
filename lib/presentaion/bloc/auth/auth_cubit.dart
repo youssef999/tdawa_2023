@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'package:doctors_app/domain/models/coins.dart';
+import 'package:doctors_app/domain/models/sales.dart';
 import 'package:doctors_app/domain/models/user.dart';
 import 'package:doctors_app/domain/models/user_model.dart';
 import 'package:doctors_app/presentaion/bloc/auth/auth_states.dart';
 import 'package:doctors_app/presentaion/const/app_message.dart';
 import 'package:doctors_app/presentaion/views/sales/sales_code.dart';
 import 'package:doctors_app/presentaion/widgets/Custom_Text.dart';
+import 'package:firebase_auth/firebase_auth.dart'as fauth;
 import 'package:image_picker/image_picker.dart';
 import 'package:doctors_app/Data/api_connection/api_connection.dart';
 import 'package:get/get.dart';
@@ -12,6 +15,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
+
+import '../../views/FireBase/otp_view.dart';
 
 
  class AuthCubit extends Cubit<AuthStates> {
@@ -21,6 +26,8 @@ import 'package:get_storage/get_storage.dart';
   static AuthCubit get(context) => BlocProvider.of(context);
   TextEditingController nameController = TextEditingController();
   TextEditingController catController = TextEditingController();
+  TextEditingController placeController = TextEditingController();
+  TextEditingController place2Controller = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController phoneController1 = TextEditingController();
@@ -32,24 +39,27 @@ import 'package:get_storage/get_storage.dart';
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordCheck = TextEditingController();
   TextEditingController priceController = TextEditingController();
-
+  TextEditingController notesController = TextEditingController();
+  TextEditingController code=TextEditingController();
   TextEditingController  addressController = TextEditingController();
   TextEditingController  timeController = TextEditingController();
   TextEditingController  locationController = TextEditingController();
   TextEditingController  days = TextEditingController();
 
+  Coins  coins= Coins();
+  Sales  salesInfo=Sales();
 
+  List<Sales>  salesList=[];
   TextEditingController  addressController2 = TextEditingController();
   TextEditingController  timeController2 = TextEditingController();
   TextEditingController  locationController2 = TextEditingController();
-
   TextEditingController  addressController3 = TextEditingController();
   TextEditingController  timeController3 = TextEditingController();
   TextEditingController  locationController3 = TextEditingController();
   bool x1=false;
   bool x2=false;
-
-
+ // fauth.FirebaseAuth _auth = fauth.FirebaseAuth.instance;
+  int toogleIndex=4;
   DoctorModel doctorModel = DoctorModel();
   User user = User();
   var imageLink='';
@@ -57,18 +67,23 @@ import 'package:get_storage/get_storage.dart';
   XFile? pickedImageXFile;
 
 
+  changeToogleIndex (int index){
+
+    toogleIndex = index;
+    emit(ChangeToogleIndexSuccessState());
+
+  }
+
+
   removeNew(){
     x1=false;
     emit(removeNewSuccess());
   }
 
-
   removeNew2(){
     x2=false;
     emit(removeNewSuccess2());
   }
-
-
 
   addNew(){
     x1=true;
@@ -80,11 +95,12 @@ import 'package:get_storage/get_storage.dart';
     emit(addNewSuccess2());
   }
 
-
-  registerAndSaveUserRecord({required String selectedOption}) async {
+  
+  registerAndSaveUserRecord({required String selectedOption,required bool sales}) async {
 
     final box=GetStorage();
     String country=box.read('country')??'x';
+
 
     if(emailController.text.contains('@')==false){
 
@@ -97,6 +113,7 @@ import 'package:get_storage/get_storage.dart';
     }
     else if(catController.text.length<2){
       appMessage(text: 'ادخل التخصص بشكل سليم');
+
     }
     else if(nameController.text.length<2){
       appMessage(text: 'ادخل الاسم بشكل سليم');
@@ -123,13 +140,12 @@ import 'package:get_storage/get_storage.dart';
     }
     else if(timeController.text.length<1){
       appMessage(text: 'ادخل التوقيت  بشكل سليم');
-
-
     }
 
 
     else{
       try {
+
         emit(RegisterLoadingState());
         var res =
         await http.post(Uri.parse(API.signup), body:
@@ -147,7 +163,9 @@ import 'package:get_storage/get_storage.dart';
           "doctor_phone3":phoneController3.text.trim(),
           "doctor_phone1":phoneController1.text.trim(),
           "doctor_image":imageLink,
-           'cat2':selectedOption,
+          'place':placeController.text.trim(),
+          'place2':place2Controller.text.trim(),
+          'cat2':selectedOption,
           "address1":addressController.text,
           "address2":addressController2.text,
           "address3":addressController3.text,
@@ -159,7 +177,11 @@ import 'package:get_storage/get_storage.dart';
           "location3":locationController3.text,
            'country':country
         }
+
+
         );
+
+
 
         if (res.statusCode == 200) {
 
@@ -170,6 +192,13 @@ import 'package:get_storage/get_storage.dart';
 
             print("SUCCESS");
             emit(RegisterSuccessState());
+
+
+
+            if(sales==true){
+              SalesCoins('login');
+            }
+
 
           } else {
             print(res.body);
@@ -187,6 +216,447 @@ import 'package:get_storage/get_storage.dart';
     }
 
 
+    //
+    // registerUserInFireBase(){
+    //
+    // }
+
+  void registerInFireBase() async {
+
+
+    print("REG");
+    try {
+
+      await fauth.FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: "+2"+phoneController.text,
+        verificationCompleted: (fauth.PhoneAuthCredential credential) {
+
+        },
+        verificationFailed: (fauth.FirebaseAuthException e) {},
+        codeSent: (String verificationId, int? resendToken) {
+          print(verificationId);
+          print("kkkkkvvvvvvvv");
+          Get.to(OtpView());
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+
+    } catch (e) {
+      appMessage(text: 'حدث خطا');
+      print("$e");
+    }
+  }
+
+
+  addNewFilter() async {
+
+    final box=GetStorage();
+    String country=box.read('country')??'x';
+    emit(AddNewFilterLoadingState());
+    try {
+      var res = await http.post(Uri.parse(API.AddFilters), body: {
+        'name': catController.text,
+        'country':country
+      });
+
+      print("res======== ${res.body}");
+
+      if (res.statusCode == 200) {
+        print("200");
+
+        var resOfLogin = jsonDecode((res.body));
+
+        if (resOfLogin['success'] == true) {
+
+
+          print("SUCCESSS");
+          emit(AddNewFilterSuccessState());
+
+
+        }
+
+        else {
+          emit(AddNewFilterErrorState('not 200'));
+
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(AddNewFilterErrorState('$e'));
+
+    }
+  }
+
+  addNewPlaces() async {
+
+    final box=GetStorage();
+    String country=box.read('country')??'x';
+    emit(AddNewPlacesLoadingState());
+    try {
+      var res = await http.post(Uri.parse(API.AddPlaces), body: {
+        'name': placeController.text,
+        'country':country
+      });
+
+      print("res======== ${res.body}");
+
+      if (res.statusCode == 200) {
+        print("200");
+
+        var resOfLogin = jsonDecode((res.body));
+
+        if (resOfLogin['success'] == true) {
+          print("SUCCESSS");
+          emit(AddNewPlacesSuccessState());
+          // Future.delayed(Duration(seconds: 2)).then((value) {
+          //   addNewPlaces2();
+          // });
+
+        }
+        else {
+          emit(AddNewPlacesErrorState('not 200'));
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(AddNewPlacesErrorState('$e'));
+
+    }
+  }
+
+  addNewPlaces2() async {
+
+    final box=GetStorage();
+    String country=box.read('country')??'x';
+    emit(AddNewPlacesLoadingState2());
+    try {
+      var res = await http.post(Uri.parse(API.AddPlaces2), body: {
+        'name': place2Controller.text,
+        'place':placeController.text,
+      });
+
+      print("res======== ${res.body}");
+
+      if (res.statusCode == 200) {
+        print("200");
+
+        var resOfLogin = jsonDecode((res.body));
+
+        if (resOfLogin['success'] == true) {
+
+
+          print("SUCCESSS");
+          emit(AddNewPlacesSuccessState2());
+
+
+        }
+
+        else {
+          emit(AddNewPlacesErrorState2('error'));
+
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(AddNewPlacesErrorState2('$e'));
+
+    }
+  }
+
+  SalesCoins(String type) async {
+
+    final box=GetStorage();
+    var id=box.read('SalesId');
+  String coins=box.read('SalesCoins');
+    int loginCoins=box.read('loginCoins');
+    int systemCoins=box.read('systemCoins');
+    int adsCoins=box.read('adsCoins');
+  int c=int.parse(coins);
+  //int cLogin=int.parse(loginCoins);
+    int c2=0;
+    String c3='';
+    if(type=='login'){
+       c2=c+loginCoins;
+       c3=c2.toString();
+    }
+    else if(type=='system'){
+      c2=c+systemCoins;
+      c3=c2.toString();
+    }else if(type=='ads'){
+      c2=c+adsCoins;
+      c3=c2.toString();
+    }
+
+
+
+    print('COINS=='+coins.toString());
+    print('ID=='+id.toString());
+    print('NEW COINS=='+c3);
+      try {
+        emit(SalesCoinsLoadingState());
+        var res =
+        await http.post(Uri.parse(API.SalesCoins), body:
+        {
+            'id':id,
+             'coins':c3
+        });
+
+        if (res.statusCode == 200) {
+          var resOfSignUp = jsonDecode(res.body);
+          print(resOfSignUp);
+          if (resOfSignUp['success'] == true) {
+            print("SUCCESS");
+            emit(SalesCoinsSuccessState());
+
+          } else {
+            print(res.body);
+            print("error${res.statusCode}");
+            emit(SalesCoinsErrorState('not 200'));
+
+          }
+        }
+      } catch (e) {
+
+        print("ERROR==$e");
+        emit(SalesCoinsErrorState('$e'));
+
+      }
+
+  }
+
+  salesLogin() async {
+
+    emit(SalesLoginLoadingState());
+    try {
+      var res = await http.post(Uri.parse(API.SalesLogin), body: {
+        'code': code.text.trim(),
+      });
+
+      print("res======== ${res.body}");
+
+      if (res.statusCode == 200) {
+        print("200");
+
+        var resOfLogin = jsonDecode((res.body));
+
+
+        if (resOfLogin['success'] == true) {
+
+          print("SALES INfo==== ${resOfLogin["Data"]["id"]}");
+          final box = GetStorage();
+          box.write('SalesId',resOfLogin["Data"]["id"]);
+          box.write('SalesCoins',resOfLogin["Data"]["coins"]);
+          box.write('SalesName',resOfLogin["Data"]["name"]);
+          print("SUCCESSS");
+          emit(SalesLoginSuccessState());
+
+        }
+
+        else {
+          emit(SalesLoginErrorState('not 200'));
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(SalesLoginErrorState('$e'));
+
+    }
+  }
+
+  systemBooking() async {
+
+    emit(SalesSystemLoadingState());
+    try {
+      var res = await http.post(Uri.parse(API.SystemBooking), body: {
+        'doctor_name': nameController.text.trim(),
+        'doctor_phone': phoneController.text.trim(),
+        'price': priceController.text.trim(),
+        'notes': notesController.text.trim(),
+      });
+
+      print("res======== ${res.body}");
+
+      if (res.statusCode == 200) {
+        print("200");
+
+        var resOfLogin = jsonDecode((res.body));
+
+
+        if (resOfLogin['Success'] == true) {
+
+          emit(SalesSystemSuccessState());
+          SalesCoins('system');
+        }
+
+        else {
+          emit(SalesSystemErrorState('not 200'));
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(SalesSystemErrorState('$e'));
+
+    }
+  }
+
+
+  getCoins() async {
+
+
+
+    emit(GetCoinsLoadingState());
+    try {
+      var res = await http.get(Uri.parse(API.Coins));
+
+      print("res Sales Data ======== ${res.body}");
+
+      if (res.statusCode == 200) {
+
+        print("200");
+        var resOfLogin = jsonDecode((res.body));
+
+        if (resOfLogin['success'] == true) {
+
+        coins = Coins.fromJson(resOfLogin['Data']);
+
+        final box=GetStorage();
+        box.write('adsCoins', coins.ads);
+        box.write('systemCoins', coins.system);
+        box.write('loginCoins', coins.login);
+
+          emit(GetCoinsSuccessState());
+        }
+        else {
+          emit(GetCoinsErrorState('not 200'));
+
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(GetCoinsErrorState('$e'));
+
+    }
+  }
+
+
+
+
+  getSalesData() async {
+
+    final box=GetStorage();
+    String id=box.read('SalesId')??'x';
+
+    emit(SalesDataLoadingState());
+    try {
+      var res = await http.post(Uri.parse(API.SalesData), body: {
+        'id': id,
+      });
+
+      print("res Sales Data ======== ${res.body}");
+
+      if (res.statusCode == 200) {
+        print("200");
+
+        var resOfLogin = jsonDecode((res.body));
+
+        if (resOfLogin['success'] == true) {
+
+          salesInfo = Sales.fromJson(resOfLogin['Data']);
+          final box = GetStorage();
+          box.write('SalesId',resOfLogin["Data"]["id"]);
+          box.write('SalesCoins',resOfLogin["Data"]["coins"]);
+          box.write('SalesName',resOfLogin["Data"]["name"]);
+          print("SALES");
+          print(salesInfo.coins);
+          print("UserINfo====${salesInfo.id}");
+          emit(SalesDataSuccessState());
+        }
+        else {
+          emit(SalesDataErrorState('not 200'));
+
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(SalesDataErrorState('$e'));
+
+    }
+  }
+
+
+
+
+
+  loginDoctorWithPhone() async {
+
+    emit(LoginLoadingState());
+
+
+    try {
+
+      var res = await http.post(Uri.parse(API.DoctorPhoneLogin), body: {
+
+        'doctor_phone': phoneController.text.trim(),
+        'doctor_password': passwordController.text.trim(),
+      });
+
+      print("res${res.body}");
+
+      if (res.statusCode == 200) {
+        print("200");
+
+        var resOfLogin = jsonDecode((res.body));
+
+        if (resOfLogin['success'] == true) {
+          DoctorModel doc_Info = DoctorModel.fromJson(resOfLogin['userData']);
+          print("UserINfo====${doc_Info.doctor_email}");
+
+          final box = GetStorage();
+
+          box.write('doc_email',doc_Info.doctor_email);
+          box.write('doc_Id',doc_Info.doctor_id);
+
+          print("SUCCESSS");
+          emit(LoginSuccessState());
+
+
+        }
+
+        else {
+          emit(LoginErrorState('not 200'));
+
+        }
+      }
+      else{
+        print(res.statusCode);
+      }
+    } catch (e) {
+      print(e);
+      emit(LoginErrorState(e.toString()));
+
+    }
+  }
 
 
   login() async {
@@ -261,6 +731,8 @@ import 'package:get_storage/get_storage.dart';
 
           emit(UserRegisterSuccessState());
 
+          registerInFireBase();
+
         } else {
           print(res.body);
           print("error${res.statusCode}");
@@ -277,15 +749,77 @@ import 'package:get_storage/get_storage.dart';
   }
 
   userLogin() async {
+
     if(emailController.text=='sales@gmail.com'&&passwordController.text=='123456'){
-      Get.to( SalesCodeView());
+      Get.offAll( SalesCodeView());
+
     }
     else{
       emit(UserLoginLoadingState());
+
+
       try {
 
         var res = await http.post(Uri.parse(API.userLogin), body: {
           'email': emailController.text.trim(),
+          'password': passwordController.text.trim(),
+        });
+
+        print("res${res.body}");
+
+        if (res.statusCode == 200) {
+          print("200");
+
+
+          var resOfLogin = jsonDecode((res.body));
+
+          if (resOfLogin['success'] == true) {
+
+            user = User.fromJson(resOfLogin['userData']);
+
+            print("UserINfo====${user.email}");
+            final box = GetStorage();
+            box.write('email', user.email);
+            box.write('userName',user.name);
+            box.write('userId', user.id);
+            print(user.id);
+
+            print("SUCCESSS");
+            // appMessage(text: 'تم تسجيل الدخول بنجاح');
+
+
+            emit(UserLoginSuccessState());
+
+
+          }
+          else {
+            emit(UserLoginErrorState('not 200'));
+
+          }
+        }
+        else{
+          print(res.statusCode);
+        }
+      } catch (e) {
+        print(e);
+        emit(UserLoginErrorState(e.toString()));
+
+      }
+    }
+  }
+
+  userLoginWithPhone() async {
+    if(emailController.text=='sales@gmail.com'&&passwordController.text=='123456'){
+      Get.offAll( SalesCodeView());
+    }
+    else{
+      emit(UserLoginLoadingState());
+
+
+      try {
+
+        var res = await http.post(Uri.parse(API.UserPhoneLogin), body: {
+          'phone': phoneController.text.trim(),
           'password': passwordController.text.trim(),
         });
 
@@ -433,7 +967,6 @@ import 'package:get_storage/get_storage.dart';
 
       Map<String, dynamic> jsonRes = json.decode(resultFromImgurApi);
       imageLink = (jsonRes["data"]["link"]).toString();
-      String deleteHash = (jsonRes["data"]["deletehash"]).toString();
 
       emit(setImageSuccessState());
     } catch (e) {

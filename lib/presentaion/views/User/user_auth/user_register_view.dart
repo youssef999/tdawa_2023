@@ -127,7 +127,11 @@ import 'package:get/get.dart';
 
                               CustomButton(text: "انشاء الحساب ",
                                   onPressed: () {
-                                    authCubit.userRegister();
+
+
+                                 authCubit. registerInFireBase();
+
+                                    //authCubit.userRegister();
                                   }, color1: ColorsManager.primary,
                                   color2: Colors.white),
 
@@ -148,15 +152,11 @@ import 'package:get/get.dart';
                   Get.to(UserLoginView(
                     cat: 'doctor',
                   ));
-
                   appMessage(text: 'تم انشاء الحساب بنجاح');
-
                 }
 
                 if (state is UserRegisterErrorState) {
-
                   appMessage(text: 'خطا في انشاء الحساب');
-
                 }
               },
               builder: (context, state) {

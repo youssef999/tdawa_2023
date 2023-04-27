@@ -72,7 +72,8 @@ class HomeView extends StatelessWidget {
                                 width: 7,
                               ),
                               Container(
-                                height: 120,
+                                height: 100,
+                                width:80,
                                 color: ColorsManager.primary,
                                 child: Padding(
                                   padding: const EdgeInsets.all(6.0),
@@ -87,6 +88,15 @@ class HomeView extends StatelessWidget {
                               ),
                               Column(
                                 children:  [
+                                  Custom_Text(
+                                    text:  "ID : "+tdawaCubit.doctorModel.doctor_id.toString(),
+                                    alignment: Alignment.center,
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
                                   Custom_Text(
                                     text:  tdawaCubit.doctorModel.doctor_name.toString(),
                                     alignment: Alignment.center,
@@ -105,12 +115,12 @@ class HomeView extends StatelessWidget {
                                 ],
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width*0.24,
+                                width: MediaQuery.of(context).size.width*0.21,
                               ),
                               SizedBox(
-                                height: 50,
+                                height: 90,
                                 child: Image.asset(
-                                  'assets/images/icon.png',
+                                  'assets/images/t.png',
                                   // fit:BoxFit.cover,
                                 ),
                               )
@@ -194,7 +204,7 @@ class HomeView extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width*0.3,
                               ),
                               InkWell(
-                                child: const Custom_Text(
+                                child:  Custom_Text(
                                   text: 'عرض الكل  ',
                                   color: ColorsManager.primary,
                                   fontSize: 18,
@@ -241,7 +251,9 @@ class HomeView extends StatelessWidget {
                                     const SizedBox(height: 10,),
                                     CustomButton(text: 'اشترك الان',
                                         onPressed:(){
-                                          Get.to(const TdawaPlusView());
+                                          Get.to( TdawaPlusView(
+                                             sales: false,
+                                          ));
                                         }, color1:ColorsManager.primary,
                                         color2: Colors.white),
                                     const SizedBox(height: 10,),
@@ -250,7 +262,9 @@ class HomeView extends StatelessWidget {
                               ),
                             ),
                             onTap:(){
-                              Get.to(const TdawaPlusView());
+                              Get.to( TdawaPlusView(
+                                sales: false,
+                              ));
                             },
                           )
                         ],

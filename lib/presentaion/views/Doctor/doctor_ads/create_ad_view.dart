@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:doctors_app/presentaion/bloc/tdawa/tdawa_cubit.dart';
 import 'package:doctors_app/presentaion/bloc/tdawa/tdawa_states.dart';
 import 'package:doctors_app/presentaion/const/app_message.dart';
+import 'package:doctors_app/presentaion/views/sales/sales_view.dart';
 import 'package:doctors_app/presentaion/widgets/Custom_Text.dart';
 import 'package:doctors_app/presentaion/widgets/Custom_button.dart';
 import 'package:doctors_app/presentaion/widgets/custom_textformfield.dart';
@@ -15,8 +16,8 @@ import '../Home/home_view.dart';
 class CreateAdView extends StatelessWidget {
 
   int days;
-
-   CreateAdView({Key? key,required this.days}) : super(key: key);
+  bool sales;
+   CreateAdView({Key? key,required this.days,required this.sales}) : super(key: key);
 
    @override
    Widget build(BuildContext context) {
@@ -28,7 +29,13 @@ class CreateAdView extends StatelessWidget {
            if(state is addNewAdSuccessState){
              appMessage(text:'تم اضافة اعلانك بنجاح' );
 
-             Get.offAll( DashBoardDoctorView(type: 'doctor',));
+             if(sales==false){
+               Get.offAll( DashBoardDoctorView(type: 'doctor',));
+             }
+             if(sales==true){
+               Get.offAll(SalesView());
+             }
+
            }
 
            if(state is addNewAdErrorState){
@@ -93,6 +100,21 @@ class CreateAdView extends StatelessWidget {
                },
              ),
              const SizedBox(height: 20,),
+
+             (sales==true)?   CustomTextFormField(
+               controller: tdawaCubit.idController,
+               color:Colors.black,
+               obx: false,
+               obs: false,
+               type:TextInputType.text,
+               hint: ' الرمز التعريفي للطبيب ',
+               ontap:(){},
+               max: 2,
+               input: false,
+             ):SizedBox(height: 2,),
+
+             SizedBox(height: 20,),
+
              CustomTextFormField(
                controller: tdawaCubit.adNameController,
                color:Colors.black,
@@ -124,7 +146,7 @@ class CreateAdView extends StatelessWidget {
                color2:Colors.white,
                onPressed:(){
                  tdawaCubit.addNewAd(
-                   days);
+                   days,sales);
                },
              )
            ],

@@ -9,6 +9,7 @@ import 'package:doctors_app/domain/models/user.dart';
 import 'package:doctors_app/presentaion/bloc/admin/admin_cubit.dart';
 import 'package:doctors_app/presentaion/bloc/admin/admin_state.dart';
 import 'package:doctors_app/presentaion/resources/color_manager.dart';
+import 'package:doctors_app/presentaion/views/admin/BAKA/add_new_baka.dart';
 import 'package:doctors_app/presentaion/widgets/Custom_Text.dart';
 import 'package:doctors_app/presentaion/widgets/Custom_button.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class AllBakaView extends StatelessWidget {
                         color1:ColorsManager.primary,
                         color2:Colors.white,
                         onPressed:(){
-
+                          Get.to(AddNewBaka());
                         },
                       ),
                       const SizedBox(

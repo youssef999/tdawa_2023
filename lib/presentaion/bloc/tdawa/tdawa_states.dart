@@ -30,7 +30,20 @@ class getAppointmentsErrorState extends TdawaStates{
 
   getAppointmentsErrorState({required this.error});
 }
+class SalesCoinsSuccessState extends TdawaStates{
 
+}
+
+class SalesCoinsLoadingState extends TdawaStates{
+
+}
+
+class SalesCoinsErrorState extends TdawaStates{
+
+  final String error;
+
+  SalesCoinsErrorState(this.error);
+}
 class ModLoginSuccessState extends TdawaStates{
 }
 

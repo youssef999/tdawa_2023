@@ -1,18 +1,15 @@
 
+
  import 'dart:io';
+
 import 'package:doctors_app/domain/models/user.dart';
-import 'package:doctors_app/presentaion/bloc/admin/admin_cubit.dart';
 import 'package:doctors_app/presentaion/resources/color_manager.dart';
-import 'package:doctors_app/presentaion/views/admin/admin_view.dart';
 import 'package:doctors_app/presentaion/widgets/Custom_Text.dart';
 import 'package:doctors_app/presentaion/widgets/Custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
-import '../../../bloc/admin/admin_state.dart';
-import '../../../const/app_message.dart';
-
+import '../booking/book_view.dart';
 
 class DoctorDetailsView extends StatelessWidget {
 
@@ -22,23 +19,8 @@ class DoctorDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return BlocProvider(
-        create: (BuildContext context) => AdminCubit()..getAllDoctors(),
-        child: BlocConsumer<AdminCubit, AdminStates>(
-
-        listener: (context, state) {
-           if(state is DeleteDoctorsSuccessState){
-             appMessage(text: 'تم الحذف بنجاح');
-              Get.offAll(AdminView());
-           }
-    },
-
-    builder: (context, state) {
-
-    AdminCubit cubit = AdminCubit.get(context);
-
     return Scaffold(
+      backgroundColor:ColorsManager.primaryx,
       appBar:AppBar(
         elevation: 0,
         toolbarHeight: 6,
@@ -80,7 +62,7 @@ class DoctorDetailsView extends StatelessWidget {
               Row(
                 children: [
 
-                  const Icon(Icons.phone,color:ColorsManager.primary,),
+                  Icon(Icons.phone,color:ColorsManager.primary,),
                   const SizedBox(width: 20,),
                   Custom_Text(text:doctorData.doctor_phone.toString(),alignment:Alignment.topRight,
                     fontSize:15,
@@ -97,7 +79,7 @@ class DoctorDetailsView extends StatelessWidget {
               Row(
                 children: [
 
-                  const Icon(Icons.place,color:ColorsManager.primary,),
+                 Icon(Icons.place,color:ColorsManager.primary,),
                   const SizedBox(width: 20,),
                   Custom_Text(text: doctorData.address.toString(),alignment:Alignment.topRight,
                     fontSize:15,
@@ -114,7 +96,7 @@ class DoctorDetailsView extends StatelessWidget {
               const SizedBox(height: 15,),
               InkWell(
                 child: Row(
-                  children: const [
+                  children:  [
                     SizedBox(width: 60,),
                     Icon(Icons.maps_ugc_sharp,color:ColorsManager.primary,),
                     SizedBox(width: 20,),
@@ -143,7 +125,7 @@ class DoctorDetailsView extends StatelessWidget {
               Row(
                 children: [
 
-                  const Icon(Icons.place,color:ColorsManager.primary,),
+            Icon(Icons.place,color:ColorsManager.primary,),
                   const SizedBox(width: 20,),
                   Custom_Text(text: doctorData.address2.toString(),alignment:Alignment.topRight,
                     fontSize:15,
@@ -163,7 +145,7 @@ class DoctorDetailsView extends StatelessWidget {
               if(doctorData.location2!='')
               InkWell(
                 child: Row(
-                  children: const [
+                  children:  [
                     SizedBox(width: 60,),
                     Icon(Icons.maps_ugc_sharp,color:ColorsManager.primary,),
                     SizedBox(width: 20,),
@@ -191,7 +173,7 @@ class DoctorDetailsView extends StatelessWidget {
               Row(
                 children: [
 
-                  const Icon(Icons.place,color:ColorsManager.primary,),
+                Icon(Icons.place,color:ColorsManager.primary,),
                   const SizedBox(width: 20,),
                   Custom_Text(text: doctorData.address3.toString(),alignment:Alignment.topRight,
                     fontSize:15,
@@ -209,7 +191,7 @@ class DoctorDetailsView extends StatelessWidget {
               if(doctorData.location3!='')
                 InkWell(
                   child: Row(
-                    children: const [
+                    children:  [
                       SizedBox(width: 60,),
                       Icon(Icons.maps_ugc_sharp,color:ColorsManager.primary,),
                       SizedBox(width: 20,),
@@ -234,7 +216,7 @@ class DoctorDetailsView extends StatelessWidget {
               Row(
                 children: [
 
-                  const Icon(Icons.price_change,color:ColorsManager.primary,),
+                 Icon(Icons.price_change,color:ColorsManager.primary,),
                   const SizedBox(width: 20,),
                   const Custom_Text(text: 'السعر   -  ',alignment:Alignment.topRight,
                     fontSize:15,
@@ -280,6 +262,7 @@ class DoctorDetailsView extends StatelessWidget {
 
 
 
+
               Custom_Text(text: doctorData.doctor_info.toString(),alignment:Alignment.center,
                 fontSize:15,
                 color:ColorsManager.black,
@@ -311,13 +294,14 @@ class DoctorDetailsView extends StatelessWidget {
               const SizedBox(height: 20,),
 
               CustomButton(
-                text: "حذف  ",
+                text: "احجز الان ",
                 color1:ColorsManager.primary,
                 color2:Colors.white,
                 onPressed:(){
-
-                  cubit.deleteDoctor(doctorData.doctor_id.toString());
-
+                  Get.to( BookingView(
+                    doctorId: doctorData.doctor_id.toString(),
+                    days: doctorData.days.toString(),
+                  ));
                 },
               )
             ],
@@ -325,11 +309,8 @@ class DoctorDetailsView extends StatelessWidget {
         ),
       ),
     );
-    }));
   }
 }
-
-
  String url(String link) {
 
    if (Platform.isAndroid) {

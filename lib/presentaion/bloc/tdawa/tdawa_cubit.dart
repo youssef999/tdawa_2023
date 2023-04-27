@@ -36,6 +36,7 @@ import '../../../domain/models/moderator.dart';
 
 
   TextEditingController adNameController=TextEditingController();
+  TextEditingController idController=TextEditingController();
   TextEditingController adDetailsController=TextEditingController();
 
   TextEditingController emailController=TextEditingController();
@@ -514,17 +515,23 @@ print("IMAGE====="+imageLink);
   }
 
 
-  addNewAd(int days) async {
+  addNewAd(int days,bool sales) async {
     print("days-==-=$days");
     DateTime now = DateTime.now();
     DateTime futureDate = now.add( Duration(days:days));
     print(now);
     print(futureDate);
+    String id='';
     final box=GetStorage();
     String doctorId=box.read('doc_Id')??'x';
     String country=box.read('country')??'x';
     print("ID=======$doctorId");
 
+    if(sales==true){
+      id=idController.text.toString();
+    }else{
+      id=doctorId;
+    }
     if(adNameController.text.length>2&&adDetailsController.text.length>3&& imageLink.length>2)
     {
       try {
@@ -533,7 +540,7 @@ print("IMAGE====="+imageLink);
         var res =
         await http.post(Uri.parse(API.adAds), body:
         {
-          'doctor_id':doctorId,
+          'doctor_id':id,
           'name':adNameController.text,
           'details':adDetailsController.text,
           'image':imageLink,
@@ -551,7 +558,7 @@ print("IMAGE====="+imageLink);
 
             print("SUCCESS");
             emit(addNewAdSuccessState());
-
+            SalesCoins('ads');
           } else {
             print(res.body);
             print("error${res.statusCode}");
@@ -585,6 +592,71 @@ print("IMAGE====="+imageLink);
 
     }
   }
+
+  
+
+  SalesCoins(String type) async {
+
+    final box=GetStorage();
+    var id=box.read('SalesId');
+    String coins=box.read('SalesCoins');
+    int loginCoins=box.read('loginCoins');
+    int systemCoins=box.read('systemCoins');
+    int adsCoins=box.read('adsCoins');
+    int c=int.parse(coins);
+    //int cLogin=int.parse(loginCoins);
+    int c2=0;
+    String c3='';
+    if(type=='login'){
+      c2=c+loginCoins;
+      c3=c2.toString();
+    }
+    else if(type=='system'){
+      c2=c+systemCoins;
+      c3=c2.toString();
+    }else if(type=='ads'){
+      c2=c+adsCoins;
+      c3=c2.toString();
+    }
+
+
+
+    print('COINS=='+coins.toString());
+    print('ID=='+id.toString());
+    print('NEW COINS=='+c3);
+    try {
+      emit(SalesCoinsLoadingState());
+      var res =
+      await http.post(Uri.parse(API.SalesCoins), body:
+      {
+        'id':id,
+        'coins':c3
+      });
+
+      if (res.statusCode == 200) {
+        var resOfSignUp = jsonDecode(res.body);
+        print(resOfSignUp);
+        if (resOfSignUp['success'] == true) {
+          print("SUCCESS");
+          emit(SalesCoinsSuccessState());
+
+        } else {
+          print(res.body);
+          print("error${res.statusCode}");
+          emit(SalesCoinsErrorState('not 200'));
+
+        }
+      }
+    } catch (e) {
+
+      print("ERROR==$e");
+      emit(SalesCoinsErrorState('$e'));
+
+    }
+
+  }
+
+
 
   showDialogBox(BuildContext context) {
     return showDialog(

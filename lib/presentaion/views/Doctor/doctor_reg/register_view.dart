@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:another_flushbar/flushbar.dart';
 import 'package:doctors_app/presentaion/bloc/auth/auth_cubit.dart';
 import 'package:doctors_app/presentaion/bloc/auth/auth_states.dart';
 import 'package:doctors_app/presentaion/const/app_message.dart';
@@ -11,18 +9,26 @@ import 'package:doctors_app/presentaion/widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import '../../User/user_auth/user_login_view.dart';
+import '../../sales/sales_view.dart';
 
 
 
 class RegisterView extends StatefulWidget {
+
+  bool sales;
+
+  RegisterView({required this.sales});
+
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
 
 class _RegisterViewState extends State<RegisterView> {
 //   RegisterView({Key? key}) : super(key: key);
-  List<String> _options = ['طبيب', 'مستشفي', 'صيدلية','علاج نفسي','مركز تجميل','مركز اشاعة وتحليل','اخري'];
+  List<String> _options = ['طبيب', 'مستشفي', 'صيدلية','علاج نفسي','مركز تجميل','مركز اشاعة'
+    ,'مركز تحاليل','تمريض','اخري'];
 
   String selectedOption='طبيب';
 
@@ -51,22 +57,28 @@ class _RegisterViewState extends State<RegisterView> {
     return BlocProvider(
         create: (BuildContext context) => AuthCubit(),
         child: BlocConsumer<AuthCubit, AuthStates>(
-            listener: (context, state) {
+            listener: (context, state) async {
 
               if(state is RegisterSuccessState){
 
+                // cubit.addNewFilter();
                 appMessage(text: 'تم انشاء حسابك بنجاح');
 
-              Get.offAll(UserLoginView(
-                  cat: 'doctor',
-                ));
+                if(widget.sales==true){
+                  Get.offAll(SalesView());
+                }else{
+                  Get.offAll(UserLoginView(
+                    cat: 'doctor',
+                  ));
+                }
+
+
+
               }
 
               if(state is RegisterErrorState){
 
                 appMessage(text: 'حدث خطا ربما ادخلت بيانات بشكل خاطئ');
-
-
               }
             },
             builder: (context, state) {
@@ -75,7 +87,6 @@ class _RegisterViewState extends State<RegisterView> {
                 backgroundColor:ColorsManager.white,
                 appBar: AppBar(
                   elevation: 0,
-
                   backgroundColor: ColorsManager.primary,
                   toolbarHeight: 1,
                 ),
@@ -89,9 +100,14 @@ class _RegisterViewState extends State<RegisterView> {
                         child: Column(
                           children:  [
                             const SizedBox(height: 20,),
-                            Image.asset('assets/images/logo2.png'),
+
+                            const SizedBox(height: 20,),
+                            CircleAvatar(
+                              radius: 100,
+                                backgroundColor:ColorsManager.primary,
+                                child: Image.asset('assets/images/logo.png')),
                             const SizedBox(height: 10,),
-                            const Custom_Text(text: ' بيانات الطبيب',
+                            const Custom_Text(text: 'البيانات ',
                               fontSize:24,
                               alignment:Alignment.center,
                               color:Colors.black,
@@ -121,6 +137,7 @@ class _RegisterViewState extends State<RegisterView> {
                                 children: [
 
                                   CircleAvatar(
+                                    backgroundColor:ColorsManager.primary,
                                     radius: 100,
                                     child:Image.asset('assets/images/doc2.png'),
                                   ),
@@ -171,6 +188,28 @@ class _RegisterViewState extends State<RegisterView> {
                               controller:authCubit.catController,
                               color:Colors.black,
                               hint: "  التخصص ",
+                              obs: false,
+                              max:2,
+                              obx: false,
+                              ontap:(){},
+                              type:TextInputType.text,
+                            ),
+                            const SizedBox(height: 10,),
+                            CustomTextFormField(
+                              controller:authCubit.placeController,
+                              color:Colors.black,
+                              hint: " المدينة ",
+                              obs: false,
+                              max:2,
+                              obx: false,
+                              ontap:(){},
+                              type:TextInputType.text,
+                            ),
+                            const SizedBox(height: 10,),
+                            CustomTextFormField(
+                              controller:authCubit.place2Controller,
+                              color:Colors.black,
+                              hint: " المنطقة مثل : مدينة نصر او الهرم ...  ",
                               obs: false,
                               max:2,
                               obx: false,
@@ -299,7 +338,7 @@ class _RegisterViewState extends State<RegisterView> {
                             (authCubit.x1==false)?
                             InkWell(child:
                             Column(
-                              children: const [
+                              children: [
                                 Icon(Icons.add,color:ColorsManager.primary,size:30,),
                                 Custom_Text(text: 'اضافة مكان عمل ',
                                 color:Colors.black, alignment:Alignment.center,
@@ -310,7 +349,7 @@ class _RegisterViewState extends State<RegisterView> {
                               authCubit.addNew();
                             },
                             ):  InkWell(child:
-                            const Icon(Icons.minimize,color:ColorsManager.primary,size:30,),
+                           Icon(Icons.minimize,color:ColorsManager.primary,size:30,),
                               onTap:(){
                                 authCubit.removeNew();
                               },
@@ -370,7 +409,7 @@ class _RegisterViewState extends State<RegisterView> {
                             (authCubit.x2==false)?
                             InkWell(child:
                             Column(
-                              children: const [
+                              children:  [
                                 Icon(Icons.add,color:ColorsManager.primary,size:30,),
                                 Custom_Text(text: 'اضافة مكان عمل ',
                                   color:Colors.black, alignment:Alignment.center,
@@ -381,7 +420,7 @@ class _RegisterViewState extends State<RegisterView> {
                                 authCubit.addNew2();
                               },
                             ):  InkWell(child:
-                            const Icon(Icons.minimize,color:ColorsManager.primary,size:30,),
+                             Icon(Icons.minimize,color:ColorsManager.primary,size:30,),
                               onTap:(){
                                 authCubit.removeNew2();
                               },
@@ -439,7 +478,16 @@ class _RegisterViewState extends State<RegisterView> {
                             const SizedBox(height: 20,),
                             CustomButton(text: "تسجيل",
                                 onPressed: (){
-                                  authCubit.registerAndSaveUserRecord(selectedOption: selectedOption);
+
+                                  authCubit.addNewFilter();
+                                  authCubit.addNewPlaces();
+                                  authCubit.addNewPlaces2();
+
+                                  authCubit.registerAndSaveUserRecord(selectedOption: selectedOption
+                                      ,sales:widget.sales);
+
+
+
                                 }, color1:ColorsManager.primary,
                                 color2: Colors.white),
                             const SizedBox(height: 30,),

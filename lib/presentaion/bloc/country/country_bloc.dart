@@ -43,6 +43,7 @@ class CountryCubit extends Cubit<CountryStates> {
 
     }
     catch(e){
+      print("e==="+e.toString());
       print("eeee");
       emit(GetCountryErrorState('error'));
 

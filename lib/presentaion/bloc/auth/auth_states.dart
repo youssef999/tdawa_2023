@@ -35,6 +35,158 @@ class UserLoginSuccessState extends AuthStates{
   UserLoginSuccessState();
 }
 
+
+
+
+
+
+
+class SalesLoginLoadingState extends AuthStates{
+
+}
+
+class SalesLoginErrorState extends AuthStates{
+
+  final String error;
+
+  SalesLoginErrorState(this.error);
+}
+
+
+class SalesLoginSuccessState extends AuthStates{
+
+
+
+  SalesLoginSuccessState();
+}
+
+class SalesSystemLoadingState extends AuthStates{
+
+}
+
+class SalesSystemErrorState extends AuthStates{
+
+  final String error;
+
+  SalesSystemErrorState(this.error);
+}
+
+
+class SalesSystemSuccessState extends AuthStates{
+
+
+
+  SalesSystemSuccessState();
+}
+
+class SalesDataLoadingState extends AuthStates{
+
+}
+
+class SalesDataErrorState extends AuthStates{
+
+  final String error;
+
+  SalesDataErrorState(this.error);
+}
+
+
+class SalesDataSuccessState extends AuthStates{
+
+
+
+  SalesDataSuccessState();
+}
+
+
+
+class GetCoinsLoadingState extends AuthStates{
+
+}
+
+class GetCoinsErrorState extends AuthStates{
+
+  final String error;
+
+  GetCoinsErrorState(this.error);
+}
+
+
+class GetCoinsSuccessState extends AuthStates{
+
+  GetCoinsSuccessState();
+}
+
+
+
+
+
+
+
+
+
+
+
+class AddNewFilterLoadingState extends AuthStates{
+
+}
+
+class AddNewFilterErrorState extends AuthStates{
+
+  final String error;
+
+  AddNewFilterErrorState(this.error);
+}
+
+
+class AddNewFilterSuccessState extends AuthStates{
+  AddNewFilterSuccessState();
+}
+
+class AddNewPlacesLoadingState extends AuthStates{
+
+}
+
+class AddNewPlacesErrorState extends AuthStates{
+
+  final String error;
+
+  AddNewPlacesErrorState(this.error);
+}
+
+
+class AddNewPlacesSuccessState extends AuthStates{
+  AddNewPlacesSuccessState();
+}
+
+
+class AddNewPlacesLoadingState2 extends AuthStates{
+
+}
+
+class AddNewPlacesErrorState2 extends AuthStates{
+
+  final String error;
+
+  AddNewPlacesErrorState2(this.error);
+}
+
+
+class AddNewPlacesSuccessState2 extends AuthStates{
+  AddNewPlacesSuccessState2();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 class UserLoginLoadingState extends AuthStates{
 
 }
@@ -73,6 +225,32 @@ class RegisterErrorState extends AuthStates{
 
 
 
+
+
+class SalesCoinsSuccessState extends AuthStates{
+
+}
+
+class SalesCoinsLoadingState extends AuthStates{
+
+}
+
+class SalesCoinsErrorState extends AuthStates{
+
+  final String error;
+
+  SalesCoinsErrorState(this.error);
+}
+
+
+
+
+
+
+
+
+
+
 class UserRegisterSuccessState extends AuthStates{
 
 }
@@ -88,9 +266,27 @@ class UserRegisterErrorState extends AuthStates{
   UserRegisterErrorState(this.error);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class setImageSuccessState extends AuthStates{
 
 }
+
+
+
 
 
 class SendDeviceIdSuccessState extends AuthStates{
@@ -122,6 +318,13 @@ class addNewSuccess extends AuthStates{
 
 
 }
+
+
+class ChangeToogleIndexSuccessState extends AuthStates{
+
+
+}
+
 
 class removeNewSuccess extends AuthStates{
 

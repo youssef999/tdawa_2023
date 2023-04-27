@@ -1,8 +1,8 @@
-import 'dart:io';
+
+
 import 'package:doctors_app/presentaion/bloc/admin/admin_cubit.dart';
 import 'package:doctors_app/presentaion/bloc/admin/admin_state.dart';
 import 'package:doctors_app/presentaion/resources/color_manager.dart';
-import 'package:doctors_app/presentaion/widgets/Custom_Text.dart';
 import 'package:doctors_app/presentaion/widgets/custom_textformfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,97 +37,100 @@ class AddNewBaka extends StatelessWidget {
                   backgroundColor:ColorsManager.primary,
                 ),
                 body:
-                Column(
-                  children:  [
-                    const SizedBox(height: 20,),
-                    Image.asset('assets/images/logo2.png'),
+                SingleChildScrollView(
+                  child:
+                  Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Column(
+                      children:  [
+                        const SizedBox(height: 20,),
+                        Image.asset('assets/images/logo2.png'),
+                        const SizedBox(height: 20,),
+                        CustomTextFormField(
+                          controller:cubit.nameController,
+                          color:Colors.black,
+                          hint: "الاسم ",
+                          max: 2,
+                          obs: false,
+                          obx: false,
+                          ontap:(){},
+                          type:TextInputType.text,
+                        ),
+                        const SizedBox(height: 10,),
+                        CustomTextFormField(
+                          controller:cubit.detailsController,
+                          color:Colors.black,
+                          hint: "تفاصيل",
+                          max:4,
+                          obs: false,
+                          obx: false,
+                          ontap:(){},
+                          type:TextInputType.text,
+                        ),
+
+                        const SizedBox(height: 10,),
+                        CustomTextFormField(
+                          controller:cubit.desController,
+                          color:Colors.black,
+                          hint: "وصف",
+                          max: 4,
+                          obs: false,
+                          obx: false,
+                          ontap:(){},
+                          type:TextInputType.text,
+                        ),
+                        const SizedBox(height: 10,),
+                        CustomTextFormField(
+                          controller:cubit.price,
+                          color:Colors.black,
+                          hint: "السعر",
+                          max: 2,
+                          obs: false,
+                          obx: false,
+                          ontap:(){},
+                          type:TextInputType.number
+                        ),
+                        const SizedBox(height: 10,),
+                        CustomTextFormField(
+                            controller:cubit.adv,
+                            color:Colors.black,
+                            hint: "المميزات ",
+                            max: 5,
+                            obs: false,
+                            obx: false,
+                            ontap:(){},
+                            type:TextInputType.text
+                        ),
+                        const SizedBox(height: 10,),
+                        CustomTextFormField(
+                            controller:cubit.days,
+                            color:Colors.black,
+                            hint: "عدد الايام ",
+                            max: 5,
+                            obs: false,
+                            obx: false,
+                            ontap:(){},
+                            type:TextInputType.number
+                        ),
+
+                        const SizedBox(height: 10,),
 
 
+                        CustomButton(text: "اضافة",
+                            onPressed: (){
+
+                          cubit.addNewBaka();
 
 
-                    const SizedBox(height: 20,),
-                    CustomTextFormField(
-                      controller:cubit.nameController,
-                      color:Colors.black,
-                      hint: "الاسم ",
-                      max: 2,
-                      obs: false,
-                      obx: false,
-                      ontap:(){},
-                      type:TextInputType.text,
+                            }, color1:ColorsManager.primary,
+                            color2: Colors.white),
+                        const SizedBox(height: 30,),
+                      ],
                     ),
-                    const SizedBox(height: 10,),
-                    CustomTextFormField(
-                      controller:cubit.detailsController,
-                      color:Colors.black,
-                      hint: "تفاصيل",
-                      max:4,
-                      obs: false,
-                      obx: false,
-                      ontap:(){},
-                      type:TextInputType.text,
-                    ),
-
-                    const SizedBox(height: 10,),
-                    CustomTextFormField(
-                      controller:cubit.desController,
-                      color:Colors.black,
-                      hint: "وصف",
-                      max: 4,
-                      obs: false,
-                      obx: false,
-                      ontap:(){},
-                      type:TextInputType.text,
-                    ),
-                    const SizedBox(height: 10,),
-                    CustomTextFormField(
-                      controller:cubit.price,
-                      color:Colors.black,
-                      hint: "السعر",
-                      max: 2,
-                      obs: false,
-                      obx: false,
-                      ontap:(){},
-                      type:TextInputType.number
-                    ),
-                    const SizedBox(height: 10,),
-                    CustomTextFormField(
-                        controller:cubit.adv,
-                        color:Colors.black,
-                        hint: "المميزات ",
-                        max: 5,
-                        obs: false,
-                        obx: false,
-                        ontap:(){},
-                        type:TextInputType.text
-                    ),
-                    const SizedBox(height: 10,),
-                    CustomTextFormField(
-                        controller:cubit.days,
-                        color:Colors.black,
-                        hint: "عدد الايام ",
-                        max: 5,
-                        obs: false,
-                        obx: false,
-                        ontap:(){},
-                        type:TextInputType.number
-                    ),
-
-                    const SizedBox(height: 10,),
-
-
-                    CustomButton(text: "اضافة",
-                        onPressed: (){
-
-                      cubit.addNewBaka();
-
-
-                        }, color1:ColorsManager.primary,
-                        color2: Colors.white),
-                    const SizedBox(height: 30,),
-                  ],
+                  ),
                 ),
               );
             }));
   }
+
 }

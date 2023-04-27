@@ -1,22 +1,26 @@
 
-
-class API {
-
-  static const hostConnection = //'http://192.168.1.37/tdawa';
-      'http://192.168.1.13/tdawa';
+ class API {
+  static const hostConnection = //'https://tadawiapp.com/tdawa';
+     'https://192.168.1.13/tdawa';
       //'http://192.168.1.5/tdawa';
      // 'http://192.168.1.13/tdawa';
       //'http://192.168.1.13/tdawa';
   static const hostConnectionUser = '$hostConnection/user';
   static const validateEmail = '$hostConnection/user/validate_email.php';
   static const signup = '$hostConnection/doctor/signup.php';
+  static const SalesCoins = '$hostConnection/doctor/sales_coins.php';
+  static const AddFilters = '$hostConnection/doctor/add_filter.php';
   static const login = '$hostConnection/doctor/login.php';
+  static const DoctorPhoneLogin = '$hostConnection/doctor/doctor_login_phone.php';
+  static const UserPhoneLogin = '$hostConnection/doctor/user_login_phone.php';
+  static const SalesLogin = '$hostConnection/doctor/sales.php';
+  static const SalesData = '$hostConnection/doctor/get_sales_data.php';
+  static const SystemBooking = '$hostConnection/doctor/system_booking.php';
+  static const Coins = '$hostConnection/doctor/coins.php';
   static const ModLogin = '$hostConnection/doctor/mod_login.php';
   static const getMod = '$hostConnection/doctor/All_moderators.php';
   static const addMod = '$hostConnection/doctor/moderators_add.php';
   static const deleteMod = '$hostConnection/doctor/delete_mod.php';
-  static const deleteDoctor = '$hostConnection/doctor/delete_doctor.php';
-  static const deleteAd = '$hostConnection/doctor/delete_ad.php';
   static const userLogin = '$hostConnection/doctor/user_login.php';
   static const userSignup = '$hostConnection/doctor/user_signup.php';
   static const appointments = '$hostConnection/doctor/ap.php';
@@ -28,8 +32,8 @@ class API {
   static const addBooking = '$hostConnection/doctor/add_booking.php';
   static const getBooking = '$hostConnection/doctor/get_booking.php';
   static const SEARCH = '$hostConnection/doctor/search.php';
+  static const SEARCHFilters = '$hostConnection/doctor/search_filters.php';
   static const allDoctorsData = '$hostConnection/patient/all_doctors.php';
-  static const AdminGetDoctors = '$hostConnection/doctor/all_doc.php';
   static const Country = '$hostConnection/doctor/country.php';
   static const addFav = '$hostConnection/doctor/add_fav.php';
   static const deleteFav = '$hostConnection/doctor/delete.php';
@@ -38,16 +42,12 @@ class API {
 
   static const bouquet = '$hostConnection/doctor/bouquet.php';
   static const ads = '$hostConnection/doctor/ads.php';
-  static const AllBooking = '$hostConnection/doctor/all_booking.php';
-  static const DeleteBaka = '$hostConnection/doctor/delete_baka.php';
-  static const DeleteCat = '$hostConnection/doctor/delete_cat.php';
+  static const ads2 = '$hostConnection/doctor/ads2.php';
 
-  static const AddCat = '$hostConnection/doctor/add_cat.php';
-  static const AddBaka = '$hostConnection/doctor/add_baka.php';
+  static const Filters = '$hostConnection/doctor/get_filters.php';
 
-  static const AddCountry = '$hostConnection/doctor/add_country.php';
-  static const AddBestAdd = '$hostConnection/doctor/add_best_ad.php';
-  static const DeleteCountry = '$hostConnection/doctor/delete_country.php';
+  static const Places = '$hostConnection/doctor/get_places.php';
+  static const Places2 = '$hostConnection/doctor/get_places2.php';
 
   static const TopDoctors = '$hostConnection/doctor/top_doctors.php';
 
@@ -74,6 +74,9 @@ class API {
   static const deleteFromCart = '$hostConnection/cart/delete.php';
   static const getCart = '$hostConnection/cart/read.php';
   static const updateQuantity = '$hostConnection/cart/update.php';
+
+    static const AddPlaces = '$hostConnection/doctor/add_places.php';
+  static const AddPlaces2 = '$hostConnection/doctor/add_places2.php';
 
 }
 //192.168.1.10
